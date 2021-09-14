@@ -19,8 +19,13 @@ class _HomePageState extends State<HomePage> {
   num position = 1;
   final key = UniqueKey();
   var internet = false;
+  bool loadBottomNavBar = false;
+
+  int _currentIndex = 1;
+
 
   doneLoading(String A) {
+    loadBottomNavBar = true;
     setState(() {
       position = 0;
     });
@@ -87,7 +92,7 @@ class _HomePageState extends State<HomePage> {
           body: IndexedStack(index: position, children: [
             _connectionStatus != 'Failed to get connectivity.'
                 ? WebView(
-                    initialUrl: 'https://driptripsworld.com',
+                    initialUrl: 'https://driptripsworld.com/music/',
                     javascriptMode: JavascriptMode.unrestricted,
                     onWebViewCreated: (WebViewController wc) {
                       controller = wc;
@@ -97,23 +102,23 @@ class _HomePageState extends State<HomePage> {
                     onPageStarted: startLoading,
                   )
                 : Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SpinKitPulse(
-                        color: Colors.green,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SpinKitPulse(
+                          color: Colors.green,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
                           'No internet connection \n Please check your internet settings',
                           style: TextStyle(color: Colors.white),
-                        textAlign: TextAlign.center,
+                          textAlign: TextAlign.center,
                         ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
             Container(
               height: MediaQuery.of(context).size.height,
               color: Color(0xFF0D0D0E),
@@ -123,6 +128,33 @@ class _HomePageState extends State<HomePage> {
               )),
             ),
           ]),
+          bottomNavigationBar: loadBottomNavBar?BottomNavigationBar(
+            backgroundColor: Color(0xFF0D0D0E),
+            currentIndex: _currentIndex,
+            onTap: (value) {
+              // Respond to item press.
+              if(value == 0){
+                controller.loadUrl('https://driptripsworld.com/');
+              }
+              else if(value == 2){
+                controller.loadUrl('https://driptripsworld.com/shop/');
+              }
+              else{
+                controller.loadUrl('https://driptripsworld.com/music/');
+              }
+              setState(() => _currentIndex = value);
+            },
+            selectedItemColor: Colors.white,
+            unselectedItemColor: Colors.white.withOpacity(0.60),
+            items: [
+            BottomNavigationBarItem(icon: Icon(Icons.home_filled),label: 'Home'),
+            BottomNavigationBarItem(icon: Icon(Icons.music_note),label: 'Radio'),
+            BottomNavigationBarItem(icon: Icon(Icons.shopping_bag_rounded),label: 'Shop'),
+          ],
+
+          ):Container(
+            height: 0,
+          ),
         ),
       ),
     );
