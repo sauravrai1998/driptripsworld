@@ -79,9 +79,16 @@ class _HomePageState extends State<HomePage> {
     return WillPopScope(
       onWillPop: () async {
         String url = await controller.currentUrl();
-        if (url == "https://driptripsworld.com/") {
+        if (_currentIndex == 0 && url == "https://driptripsworld.com/") {
           return true;
-        } else {
+        }
+        else if(_currentIndex == 1 && url == "https://driptripsworld.com/music/"){
+          return true;
+        }
+        else if(_currentIndex == 2 && url == "https://driptripsworld.com/shop/"){
+          return true;
+        }
+        else {
           controller.goBack();
           return false;
         }
